@@ -37,6 +37,7 @@ export default function WorkspaceEntry({
                   actionType: "select",
                   targetType: "project",
                   projectID,
+                  workspaceID,
                 });
               }}
             >

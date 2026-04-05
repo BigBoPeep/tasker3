@@ -42,6 +42,7 @@ html {
 @theme inline {
   --color-btn: var(--color-gray-400);
   --color-input: var(--color-gray-700);
+  --default-font-family: "Nunito", var(--font-sans);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -49,7 +50,4 @@ html {
     --color-btn: var(--color-gray-300);
     --color-input: var(--color-gray-500);
   }
-}
-
-@theme {
 }

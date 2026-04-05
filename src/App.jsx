@@ -3,6 +3,7 @@ import { Workspace, Project, Task } from "./modules/data";
 import { workspaces, projects, tasks, settings } from "./modules/signals";
 import { Cog } from "lucide-react";
 import WorkspaceUI from "./components/WorkspaceUI";
+import ProjectUI from "./components/ProjectUI";
 
 const testTask1 = new Task({
   title: "Test Task #1",
@@ -27,13 +28,22 @@ projects.value = { [testProject1.id]: testProject1 };
 workspaces.value = { [testWorkspace1.id]: testWorkspace1 };
 
 function App() {
-  const [selectedProj, setSelectedProj] = useState(null);
+  const [selectedProj, setSelectedProj] = useState({
+    workspaceID: null,
+    projectID: null,
+  });
 
   return (
     <div className="flex flex-col size-full">
       <div className="flex-1 grid grid-cols-[min(400px,40%)_1fr] overflow-hidden">
-        <div className="flex flex-col items-center gap-2 p-2 overflow-hidden">
-          <img src="/logo.webp" className="w-full" />
+        <div className="bg-emerald-300 flex flex-col items-center gap-2 p-2 overflow-hidden">
+          <img
+            src="/logo.webp"
+            className="w-full"
+            onClick={() =>
+              setSelectedProj({ workspaceID: null, projectID: null })
+            }
+          />
           <button>
             <Cog />
             Settings
@@ -44,7 +54,12 @@ function App() {
             onAction={handleAction}
           />
         </div>
-        <div>ProjectUI</div>
+        <ProjectUI
+          projects={projects}
+          tasks={tasks}
+          settings={settings}
+          selectedProject={selectedProj}
+        />
       </div>
       <footer>Copyright © 2026 Lane Robey</footer>
     </div>
@@ -160,8 +175,10 @@ function App() {
       case "select": {
         switch (data.targetType) {
           case "project": {
-            setSelectedProj(data.projectID);
-            console.log(data.projectID);
+            setSelectedProj({
+              workspaceID: data.workspaceID,
+              projectID: data.projectID,
+            });
             return;
           }
         }

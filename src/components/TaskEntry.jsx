@@ -3,14 +3,14 @@ import { format } from "date-fns";
 
 export default function TaskEntry({ task }) {
   return (
-    <div className="task-entry">
-      <div className="task-entry_title">{task.title}</div>
-      <div className="task-entry_deadline">
+    <div>
+      <div>{task.title}</div>
+      <div>
         {`Due: `}
         <span>{format(task.deadline, "eee MMM do, y '@' h:mmaaa")}</span>
       </div>
-      <div className="task-entry_desc">{task.desc}</div>
-      <div className="task-entry_created">
+      <div>{task.desc}</div>
+      <div>
         {`Created: `}
         <span>{format(task.created, "Pp")}</span>
       </div>

@@ -1,5 +1,5 @@
 import { signal, effect } from "@preact/signals-react";
-import { STORE_NAMES } from "../App.config";
+import { STORE_NAMES, DEFAULT_SETTINGS } from "../App.config";
 import { Workspace, Project, Task } from "./data";
 
 export const workspaces = signal(getSaved(STORE_NAMES.workspaces, Workspace));
@@ -28,7 +28,7 @@ effect(() => {
 
 function getSaved(storeName, reclass) {
   const saved = localStorage.getItem(storeName);
-  if (saved == null) return {};
+  if (saved == null) return { ...DEFAULT_SETTINGS };
   const parsed = JSON.parse(saved);
   if (reclass)
     return Object.fromEntries(
