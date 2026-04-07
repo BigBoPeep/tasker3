@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
+import { useSignal } from "@preact/signals-react";
 import { Workspace, Project, Task } from "./modules/data";
 import { workspaces, projects, tasks, settings } from "./modules/signals";
 import { Cog } from "lucide-react";
@@ -28,21 +29,16 @@ projects.value = { [testProject1.id]: testProject1 };
 workspaces.value = { [testWorkspace1.id]: testWorkspace1 };
 
 function App() {
-  const [selectedProj, setSelectedProj] = useState({
-    workspaceID: null,
-    projectID: null,
-  });
+  const selectedProject = useSignal(null);
 
   return (
-    <div className="flex flex-col size-full">
-      <div className="flex-1 grid grid-cols-[min(400px,40%)_1fr] overflow-hidden">
+    <div className="flex flex-col w-dvw h-dvh">
+      <div className="flex-1 grid grid-cols-[min(400px,40%)_auto] w-full overflow-hidden">
         <div className="bg-emerald-300 flex flex-col items-center gap-2 p-2 overflow-hidden">
           <img
             src="/logo.webp"
-            className="w-full"
-            onClick={() =>
-              setSelectedProj({ workspaceID: null, projectID: null })
-            }
+            className="w-full cursor-pointer"
+            onClick={() => (selectedProject.value = null)}
           />
           <button>
             <Cog />
@@ -58,7 +54,8 @@ function App() {
           projects={projects}
           tasks={tasks}
           settings={settings}
-          selectedProject={selectedProj}
+          selectedProject={selectedProject}
+          onAction={handleAction}
         />
       </div>
       <footer>Copyright © 2026 Lane Robey</footer>
@@ -175,10 +172,7 @@ function App() {
       case "select": {
         switch (data.targetType) {
           case "project": {
-            setSelectedProj({
-              workspaceID: data.workspaceID,
-              projectID: data.projectID,
-            });
+            selectedProject.value = data.projectID;
             return;
           }
         }

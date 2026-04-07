@@ -2,7 +2,15 @@ import React from "react";
 import { effect } from "@preact/signals-react";
 import { ChevronDown, Square, Check } from "lucide-react";
 
-export default function FilterSelect({ settings }) {
+const bgColor = "bg-input";
+const checkColor = "stroke-red-800";
+
+export default function FilterSelect({
+  settings,
+  onChange,
+  bgColor = "input",
+  checkColor = "red-800",
+}) {
   let selectedStr = "";
 
   effect(() => {
@@ -14,12 +22,16 @@ export default function FilterSelect({ settings }) {
           settings.value.filters[opt].text;
       }
     }
+    selectedStr = selectedStr || "None";
     return () => (selectedStr = "");
   });
 
   return (
-    <div className="relative group/multi rounded-md hover:rounded-b-none cursor-default bg-amber-100">
-      <div className="flex justify-between px-2 py-1">
+    <div
+      className={`relative group/multi rounded-md hover:rounded-b-none cursor-default bg-${bgColor}
+      transition-all duration-300 ease-out transform-gpu`}
+    >
+      <div className="flex justify-between items-center px-2 py-1">
         <p className="whitespace-nowrap text-ellipsis overflow-hidden">
           {selectedStr}
         </p>
@@ -31,16 +43,16 @@ export default function FilterSelect({ settings }) {
         </Square>
       </div>
       <div
-        className="absolute w-full cursor-pointer scale-y-0 scale-x-90 group-hover/multi:scale-y-100
+        className={`absolute w-full cursor-pointer scale-y-0 scale-x-90 group-hover/multi:scale-y-100
         group-hover/multi:scale-x-100 transition-transform ease-out duration-300 origin-top 
-        px-2 py-2 flex flex-col gap-1.5 rounded-b-md bg-amber-100"
+        py-1 flex flex-col rounded-b-md bg-${bgColor}`}
       >
         {Object.entries(settings.value.filters).map(([opt, optData]) => {
           return (
             <div
-              className="flex justify-between"
+              className="flex justify-between px-2 py-1 hover:bg-transBG-2"
               onClick={() => {
-                handleChange(opt);
+                if (typeof onChange === "function") onChange(opt);
               }}
               key={opt}
             >
@@ -51,7 +63,9 @@ export default function FilterSelect({ settings }) {
                 <Check
                   className={
                     "stroke-5 origin-center scale-x-125 transition-[stroke] " +
-                    (optData.enabled ? "stroke-red-800" : "stroke-transparent")
+                    (optData.enabled
+                      ? `stroke-${checkColor}`
+                      : "stroke-transparent")
                   }
                 />
               </Square>
@@ -62,9 +76,5 @@ export default function FilterSelect({ settings }) {
     </div>
   );
 
-  function handleChange(opt) {
-    const newFilt = { ...settings.value.filters };
-    newFilt[opt].enabled = !newFilt[opt].enabled;
-    settings.value = { ...settings.value, filters: newFilt };
-  }
+  function handleChange(opt) {}
 }
