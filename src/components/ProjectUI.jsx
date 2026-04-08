@@ -1,5 +1,4 @@
-import React from "react";
-import { createPortal } from "react-dom";
+import React, { useEffect } from "react";
 import { useSignal } from "@preact/signals-react";
 import { Ellipsis } from "lucide-react";
 import { format } from "date-fns";
@@ -15,6 +14,19 @@ export default function ProjectUI({
   onAction,
 }) {
   const selectedTask = useSignal(null);
+  const project = projects.value[selectedProject.value];
+  const tasksToShow = project
+    ? project.taskIDs.filter((tID) => {
+        const task = tasks.value[tID];
+        let show = false;
+        Object.entries(settings.value.filters).forEach(([filt, val]) => {
+          if (val.enabled && task[filt]) show = true;
+        });
+        return show;
+      })
+    : [];
+
+  console.log("render");
 
   if (!selectedProject.value)
     return (
@@ -23,8 +35,6 @@ export default function ProjectUI({
         <></>
       </div>
     );
-
-  const project = projects.value[selectedProject.value];
 
   return (
     <div className="overflow-auto">
@@ -52,7 +62,7 @@ export default function ProjectUI({
       <div>
         <TaskControls settings={settings} />
         <div className="flex flex-col gap-1 p-1">
-          {project.taskIDs.map((taskID) => {
+          {tasksToShow.map((taskID) => {
             return (
               <TaskEntry
                 taskID={taskID}
