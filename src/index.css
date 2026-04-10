@@ -15,6 +15,8 @@ html {
     justify-content: center;
     align-items: center;
     gap: calc(var(--spacing) * 2);
+    box-shadow: var(--inset-shadow-md), var(--drop-shadow-md);
+    outline: solid 1px var(--color-transBG-3);
   }
 
   input,
@@ -23,7 +25,7 @@ html {
     padding: calc(var(--spacing) * 1) calc(var(--spacing) * 2);
     resize: none;
     border-radius: var(--radius-md);
-    outline: solid 1px var(--color-input);
+    border: solid 1px var(--color-input);
   }
 
   body {
@@ -38,22 +40,65 @@ html {
     overflow: hidden;
     position: relative;
   }
+
+  details::details-content {
+    transition:
+      height 0.75s ease-out,
+      content-visibility 0.75s ease-out allow-discrete;
+    height: 0;
+    overflow: hidden;
+  }
+
+  details[open]::details-content {
+    height: auto;
+  }
 }
 
 @theme {
   --color-transBG-1: rgb(0, 0, 0, 0.1);
   --color-transBG-2: rgb(0, 0, 0, 0.2);
+  --color-transBG-3: rgb(0, 0, 0, 0.5);
 }
 
 @theme inline {
   --color-btn: var(--color-gray-400);
   --color-input: var(--color-gray-700);
   --default-font-family: "Nunito", var(--font-sans);
+  --color-main: var(--color-taupe-100);
+  --color-pri: var(--color-zinc-400);
+  --color-sec: var(--color-indigo-500);
+  --color-text: var(--color-zinc-900);
+  --inset-shadow-md: inset 0 0 15px 5px var(--color-transBG-2);
 }
 
 @media (prefers-color-scheme: dark) {
   @theme inline {
     --color-btn: var(--color-gray-300);
     --color-input: var(--color-gray-500);
+  }
+}
+
+[data-theme="ozark"] {
+  --color-main: var(--color-olive-300);
+  --color-pri: var(--color-olive-500);
+  --color-sec: var(--color-lime-500);
+
+  @media (prefers-color-scheme: dark) {
+    --color-main: var(--color-zinc-600);
+    --color-pri: var(--color-zinc-500);
+    --color-sec: var(--color-lime-900);
+    --color-text: var(--color-amber-600);
+
+    --color-btn: var(--color-sec);
+  }
+}
+
+[data-theme="pineywood"] {
+  --color-main: var(--color-orange-100);
+  --color-pri: var(--color-lime-400);
+
+  @media (prefers-color-scheme: dark) {
+    --color-main: var(--color-amber-950);
+    --color-pri: var(--color-orange-900);
   }
 }

@@ -13,7 +13,8 @@ export default function Dropdown({
   return (
     <div
       className={`relative group/drop rounded-md hover:rounded-b-none bg-${bgColor}
-        transition-all transform-gpu duration-300 ease-out cursor-default min-w-0`}
+        transition-all transform-gpu duration-300 ease-out cursor-default min-w-0
+        z-0 hover:z-50`}
     >
       <div className="flex justify-between items-center px-2 py-1">
         <p className="w-full whitespace-nowrap text-ellipsis overflow-hidden">

@@ -5,6 +5,7 @@ import { workspaces, projects, tasks, settings } from "./modules/signals";
 import { Cog } from "lucide-react";
 import WorkspaceUI from "./components/WorkspaceUI";
 import ProjectUI from "./components/ProjectUI";
+import SettingsModal from "./components/SettingsModal";
 
 const testTask1 = new Task({
   title: "Test Task #1",
@@ -30,17 +31,18 @@ workspaces.value = { [testWorkspace1.id]: testWorkspace1 };
 
 function App() {
   const selectedProject = useSignal(null);
+  const settingsOpen = useSignal(false);
 
   return (
-    <div className="flex flex-col w-dvw h-dvh">
+    <div className="flex flex-col w-dvw h-dvh bg-(--color-main) text-(--color-text)">
       <div className="flex-1 grid grid-cols-[min(400px,40%)_auto] w-full overflow-hidden">
-        <div className="bg-emerald-300 flex flex-col items-center gap-2 p-2 overflow-hidden">
+        <div className="bg-(--color-pri) flex flex-col items-center gap-2 p-2 overflow-hidden">
           <img
             src="/logo.webp"
             className="w-full cursor-pointer"
             onClick={() => (selectedProject.value = null)}
           />
-          <button>
+          <button onClick={() => (settingsOpen.value = true)}>
             <Cog />
             Settings
           </button>
@@ -48,6 +50,7 @@ function App() {
             workspaces={workspaces}
             projects={projects}
             onAction={handleAction}
+            selectedProject={selectedProject}
           />
         </div>
         <ProjectUI
@@ -58,7 +61,10 @@ function App() {
           onAction={handleAction}
         />
       </div>
-      <footer>Copyright © 2026 Lane Robey</footer>
+      <footer className="bg-(--color-pri) text-center">
+        Copyright © 2026 Lane Robey
+      </footer>
+      <SettingsModal settings={settings} open={settingsOpen} />
     </div>
   );
 

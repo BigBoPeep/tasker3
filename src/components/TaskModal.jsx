@@ -2,13 +2,23 @@ import React, { useRef, useState, useEffect } from "react";
 import { useSignal, effect } from "@preact/signals-react";
 import { createPortal } from "react-dom";
 import { format } from "date-fns";
-import { SquareX, RotateCcw, Trash2, Forward, SquarePen } from "lucide-react";
+import Checkbox from "./Checkbox";
+import {
+  SquareX,
+  RotateCcw,
+  Trash2,
+  Forward,
+  SquarePen,
+  Square,
+  X,
+} from "lucide-react";
 
 export default function TaskModal({ taskID, tasks, onAction }) {
   const [editMode, setEditMode] = useState(false);
   const [inpTitle, setInpTitle] = useState("");
   const [inpDesc, setInpDesc] = useState("");
   const [inpDeadline, setInpDeadline] = useState("");
+  const [inpCompleted, setInpCompleted] = useState(false);
 
   useEffect(() => {
     setInpTitle(tasks.value[taskID.value]?.title || "");
@@ -19,6 +29,7 @@ export default function TaskModal({ taskID, tasks, onAction }) {
         "yyyy-MM-dd'T'HH:mm",
       ),
     );
+    setInpCompleted(tasks.value[taskID.value]?.completed !== false || false);
   }, [taskID.value, tasks.value]);
 
   return createPortal(
@@ -44,7 +55,10 @@ export default function TaskModal({ taskID, tasks, onAction }) {
           )}
           <button
             className="shrink-0 p-1"
-            onClick={() => onAction({ actionType: "close" })}
+            onClick={() => {
+              onAction({ actionType: "close" });
+              setEditMode(false);
+            }}
           >
             <SquareX />
           </button>
@@ -81,6 +95,31 @@ export default function TaskModal({ taskID, tasks, onAction }) {
             </div>
           )}
         </div>
+        <div className="px-2 py-1">
+          {editMode ? (
+            <Checkbox
+              text={"Completed:"}
+              IconOuter={Square}
+              IconInner={X}
+              checked={inpCompleted}
+              onChange={(checked) => setInpCompleted(checked)}
+            />
+          ) : (
+            <>
+              {tasks.value[taskID.value]?.completed ? (
+                <>
+                  {"Completed: "}
+                  {format(
+                    tasks.value[taskID.value]?.completed || new Date(),
+                    "EEE MMM do, y '@' h:mmaaa",
+                  )}
+                </>
+              ) : (
+                <>Incomplete</>
+              )}
+            </>
+          )}
+        </div>
         <div className="flex justify-evenly">
           <button
             onClick={() =>
@@ -105,12 +144,19 @@ export default function TaskModal({ taskID, tasks, onAction }) {
                       "yyyy-MM-dd'T'HH:mm",
                     ),
                   );
+                  setInpCompleted(
+                    tasks.value[taskID.value]?.completed !== false || false,
+                  );
                 }}
               >
                 <RotateCcw />
               </button>
               <button
                 onClick={() => {
+                  const completed = inpCompleted
+                    ? tasks.value[taskID.value].completed ||
+                      new Date().toISOString()
+                    : false;
                   onAction({
                     actionType: "update",
                     targetType: "task",
@@ -118,7 +164,7 @@ export default function TaskModal({ taskID, tasks, onAction }) {
                     title: inpTitle,
                     desc: inpDesc,
                     deadline: new Date(inpDeadline).toISOString(),
-                    completed: "",
+                    completed,
                     created: tasks.value[taskID.value].created,
                   });
                   setEditMode(false);

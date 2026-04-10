@@ -10,12 +10,11 @@ export default function WorkspaceEntry({
 }) {
   return (
     <div>
-      <details
-        className="bg-amber-200 p-1 details-content:h-0 open:details-content:h-auto
-          details-content:transition-all details-content:ease-in-out details-content:transition-discrete
-          details-content:duration-700 overflow-hidden cursor-default rounded-md group"
-      >
-        <summary className="flex cursor-pointer justify-between items-center p-1">
+      <details className="bg-transBG-2 p-1.5 cursor-default rounded-md group/ws">
+        <summary
+          className="flex cursor-pointer justify-between items-center p-1 text-lg 
+            font-semibold"
+        >
           <SquareArrowDownRight
             className="-rotate-45 group-open:rotate-0 transition-transform
               transform-gpu duration-700 ease-in-out"
@@ -27,23 +26,26 @@ export default function WorkspaceEntry({
             <Ellipsis className="size-4" />
           </button>
         </summary>
-        {workspaces.value[workspaceID].projectIDs.map((projectID) => {
-          return (
-            <div
-              key={projectID}
-              className="p-2 justify-self-center cursor-pointer"
-              onClick={() => {
-                onAction({
-                  actionType: "select",
-                  targetType: "project",
-                  projectID,
-                });
-              }}
-            >
-              {projects.value[projectID].title}
-            </div>
-          );
-        })}
+        <div className="mt-1 mb-2">
+          {workspaces.value[workspaceID].projectIDs.map((projectID) => {
+            return (
+              <div
+                key={projectID}
+                className="bg-transBG-1 py-2 min-w-8/12 justify-self-center cursor-pointer 
+                  text-center rounded-md"
+                onClick={() => {
+                  onAction({
+                    actionType: "select",
+                    targetType: "project",
+                    projectID,
+                  });
+                }}
+              >
+                {projects.value[projectID].title}
+              </div>
+            );
+          })}
+        </div>
         <FormDropdown
           titleContent={[
             <SquareArrowDownRight

@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import TaskEntry from "./TaskEntry";
 import TaskControls from "./TaskControls";
 import TaskModal from "./TaskModal";
+import Landing from "./Landing";
 
 export default function ProjectUI({
   projects,
@@ -26,15 +27,7 @@ export default function ProjectUI({
       })
     : [];
 
-  console.log("render");
-
-  if (!selectedProject.value)
-    return (
-      <div>
-        No Project Selected
-        <></>
-      </div>
-    );
+  if (!project) return <Landing />;
 
   return (
     <div className="overflow-auto">
@@ -67,6 +60,7 @@ export default function ProjectUI({
               <TaskEntry
                 taskID={taskID}
                 tasks={tasks}
+                settings={settings}
                 key={taskID}
                 onClick={() => (selectedTask.value = taskID)}
               />

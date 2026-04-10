@@ -24,11 +24,13 @@ effect(() => {
 
 effect(() => {
   localStorage.setItem(STORE_NAMES.settings, JSON.stringify(settings.value));
+  document.documentElement.dataset.theme = settings.value.theme;
 });
 
 function getSaved(storeName, reclass) {
   const saved = localStorage.getItem(storeName);
-  if (saved == null) return { ...DEFAULT_SETTINGS };
+  if (saved == null)
+    return storeName === STORE_NAMES.settings ? { ...DEFAULT_SETTINGS } : {};
   const parsed = JSON.parse(saved);
   if (reclass)
     return Object.fromEntries(
